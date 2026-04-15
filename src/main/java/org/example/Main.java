@@ -1,17 +1,37 @@
 package org.example;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+import java.sql.*;
+import java.util.Scanner;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int idDep;
+        String nombreEmp;
+        double salario;
+        int idEmp;
+
+        String sql = "SELECT nombre, salario, emp_id FROM empleado WHERE dep_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(
+                DBConfig.getUrl(),
+                DBConfig.getUser(),
+                DBConfig.getPassword()); PreparedStatement ps = conn.prepareStatement(sql)) {
+                    System.out.println("Indique el id del departamento");
+                    idDep = sc.nextInt();
+                    sc.nextLine();
+
+                    ps.setInt(1, idDep);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        nombreEmp = rs.getString(1);
+                        salario = rs.getDouble(2);
+                        idEmp = rs.getInt(3);
+                        System.out.println("Nombre del empleado: " + nombreEmp + " --> salario: " + salario + " --> id: " + idEmp);
+                    }
+        } catch (SQLException e) {
+            System.out.println("Error al conectar: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
