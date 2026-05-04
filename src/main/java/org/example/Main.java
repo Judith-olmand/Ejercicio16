@@ -11,6 +11,9 @@ public class Main {
         double salario;
         int idEmp;
 
+        /**
+         * Preparo la select para sustituir la ? por el valor introducido por teclado
+         */
         String sql = "SELECT nombre, salario, emp_id FROM empleado WHERE dep_id = ?";
 
         try (Connection conn = DriverManager.getConnection(
@@ -29,6 +32,9 @@ public class Main {
                         idEmp = rs.getInt(3);
                         System.out.println("Nombre del empleado: " + nombreEmp + " --> salario: " + salario + " --> id: " + idEmp);
                     }
+        /**
+         * Si ocurre algún error lanza la excepción
+         */
         } catch (SQLException e) {
             System.out.println("Error al conectar: " + e.getMessage());
             e.printStackTrace();
